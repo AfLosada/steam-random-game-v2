@@ -2,7 +2,9 @@ import { json } from "@remix-run/node"; // or cloudflare/deno
 import type { LoaderFunctionArgs } from "@remix-run/node"; // or cloudflare/deno
 import { useLoaderData } from "@remix-run/react";
 import { Suspense } from "react";
+import { authenticator } from "~/auth.server";
 import { GameList } from "~/pages/gameList";
+import type { User } from "~/pages/login";
 
 export type Game = {
 	appid: number;
@@ -21,23 +23,23 @@ export type Response = {
 	};
 };
 
-export async function loader({ params, request }: LoaderFunctionArgs) {
-  return {}
-	const steamId = params.steamId;
-	const url = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?steamid=${steamId}&format=json&include_appinfo=true`;
+export async function loader({ request }: LoaderFunctionArgs) {
+	const steamKey = process.env.STEAM_KEY;
+	const user = await authenticator.isAuthenticated(request);
+	const url = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${steamKey}&steamid=${user?.user.steamID}&format=json&include_appinfo=true`;
 	const res = await fetch(url);
 	const {
 		response: { games },
 	} = await res.json();
-	return json(games);
+	return json({ games, user });
 }
 
 export default function Products() {
-	useLoaderData<typeof loader>();
-	
+	const { games, user } = useLoaderData<typeof loader>();
+
 	return (
 		<Suspense>
-			<GameList/>
+			<GameList games={games} user={user?.user as User} />
 		</Suspense>
 	);
 }

@@ -9,8 +9,8 @@ export const authenticator = new Authenticator<User>(sessionStorage);
 authenticator.use(
   new SteamStrategy(
     {
-      returnURL: "http://localhost:3000/auth/steam/callback",
-      apiKey: "xxxx", // you can get it here: https://steamcommunity.com/dev/apikey
+      returnURL: "http://localhost:5173/auth/steam/callback",
+      apiKey: process.env.STEAM_KEY || "", // you can get it here: https://steamcommunity.com/dev/apikey
     },
     async (user) => user // perform additional checks for user here, I just leave this to SteamStrategyVerifyParams value
   )

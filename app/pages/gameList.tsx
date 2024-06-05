@@ -1,6 +1,8 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import {
+	ChevronLeft,
+	ChevronRight,
 	File,
 	Home,
 	LineChart,
@@ -15,17 +17,7 @@ import {
 	ShoppingCart,
 	Users2,
 } from "lucide-react";
-import { authenticator } from "~/auth.server";
-
 import { Badge } from "~/components/ui/badge";
-import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbList,
-	BreadcrumbPage,
-	BreadcrumbSeparator,
-} from "~/components/ui/breadcrumb";
 import { Button } from "~/components/ui/button";
 import {
 	Card,
@@ -44,8 +36,6 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { Input } from "~/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import {
 	Table,
 	TableBody,
@@ -54,60 +44,54 @@ import {
 	TableHeader,
 	TableRow,
 } from "~/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { Tabs, TabsContent } from "~/components/ui/tabs";
+import { TooltipProvider } from "~/components/ui/tooltip";
+import { useState } from "react";
 import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-	TooltipProvider,
-} from "~/components/ui/tooltip";
+	Pagination,
+	PaginationContent,
+	PaginationItem,
+} from "~/components/ui/pagination";
+import type { User } from "./login";
 
-function Row(game: Game) {
-  return (<TableRow>
-    <TableCell className="hidden sm:table-cell">
-      <img
-        alt={`${game.name} icon`}
-        className="aspect-square rounded-md object-cover"
-        height="64"
-        src={game.img_icon_url}
-        width="64"
-      />
-    </TableCell>
-    <TableCell className="font-medium">
-      {game.name}
-    </TableCell>
-    <TableCell>
-      <Badge variant="outline">Draft</Badge>
-    </TableCell>
-    <TableCell className="hidden md:table-cell">
-      $499.99
-    </TableCell>
-    <TableCell className="hidden md:table-cell">
-      25
-    </TableCell>
-    <TableCell className="hidden md:table-cell">
-      2023-07-12 10:42 AM
-    </TableCell>
-    <TableCell>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            aria-haspopup="true"
-            size="icon"
-            variant="ghost"
-          >
-            <MoreHorizontal className="h-4 w-4" />
-            <span className="sr-only">Toggle menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem>Edit</DropdownMenuItem>
-          <DropdownMenuItem>Delete</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </TableCell>
-  </TableRow>)
+function GameRow({ game }: { game: Game }) {
+	return (
+		<TableRow>
+			<TableCell className="hidden sm:table-cell">
+				<img
+					alt={`${game.name} icon`}
+					className="aspect-square rounded-md object-cover"
+					height="64"
+					src={`https://media.steampowered.com/steamcommunity/public/images/apps/${game.appid}/${game.img_icon_url}.jpg`}
+					width="64"
+				/>
+			</TableCell>
+			<TableCell className="font-medium sm:table-cell">{game.name}</TableCell>
+			<TableCell>
+				<Badge variant="outline">Draft</Badge>
+			</TableCell>
+			<TableCell className="hidden md:table-cell">$499.99</TableCell>
+			<TableCell className="hidden md:table-cell">25</TableCell>
+			<TableCell className="hidden md:table-cell">
+				2023-07-12 10:42 AM
+			</TableCell>
+			<TableCell>
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button aria-haspopup="true" size="icon" variant="ghost">
+							<MoreHorizontal className="h-4 w-4" />
+							<span className="sr-only">Toggle menu</span>
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="end">
+						<DropdownMenuLabel>Actions</DropdownMenuLabel>
+						<DropdownMenuItem>Edit</DropdownMenuItem>
+						<DropdownMenuItem>Delete</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
+			</TableCell>
+		</TableRow>
+	);
 }
 
 export type Game = {
@@ -127,59 +111,20 @@ export type Response = {
 	};
 };
 
-export async function loader({ request }: LoaderFunctionArgs) {
-	const steamKey = import.meta.env.STEAM_KEY;
-  const user = await authenticator.isAuthenticated(request)
-	const url = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${steamKey}&steamid=${user?.user.steamID}&format=json&include_appinfo=true`;
-	const res = await fetch(url);
-	const {
-		response: { games },
-	} = await res.json();
-	return json(games);
-}
-
-export function GameList() {
-	const games: Game[] = useLoaderData<typeof loader>();
+export function GameList({ games, user }: { games: Game[]; user: User }) {
+	const [page, setPage] = useState(0);
+	const gamesWindow = games.slice(page, page + 10);
 	return (
 		<TooltipProvider>
-			<div className="flex min-h-screen w-full flex-col bg-muted/40">
-				<div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-					<header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 flex-row-reverse">
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<Button
-									variant="outline"
-									size="icon"
-									className="overflow-hidden rounded-full"
-								>
-									<img
-										src="/placeholder-user.jpg"
-										width={36}
-										height={36}
-										alt="Avatar"
-										className="overflow-hidden rounded-full"
-									/>
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align="end">
-								<DropdownMenuLabel>My Account</DropdownMenuLabel>
-								<DropdownMenuSeparator />
-								<DropdownMenuItem>Settings</DropdownMenuItem>
-								<DropdownMenuItem>Support</DropdownMenuItem>
-								<DropdownMenuSeparator />
-								<DropdownMenuItem>Logout</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
-					</header>
-					<main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+			<div className="flex min-h-screen w-full flex-col">
+				<div className="flex flex-col sm:gap-4">
+					<main className="grid flex-1 items-start gap-4 p-4 sm:py-0 md:gap-16">
 						<Tabs defaultValue="all">
 							<TabsContent value="all">
 								<Card x-chunk="dashboard-06-chunk-0">
 									<CardHeader>
 										<CardTitle>Games</CardTitle>
-										<CardDescription>
-											See your games
-										</CardDescription>
+										<CardDescription>See your games</CardDescription>
 									</CardHeader>
 									<CardContent>
 										<Table>
@@ -205,8 +150,10 @@ export function GameList() {
 												</TableRow>
 											</TableHeader>
 											<TableBody>
-                        {games.map(()=><Row/>)}
-                      </TableBody>
+												{gamesWindow.map((game) => (
+													<GameRow key={game.appid} game={game} />
+												))}
+											</TableBody>
 										</Table>
 									</CardContent>
 									<CardFooter>
@@ -214,6 +161,33 @@ export function GameList() {
 											Showing <strong>1-10</strong> of <strong>32</strong>{" "}
 											products
 										</div>
+
+										<Pagination className="mr-0 w-auto">
+											<PaginationContent>
+												<PaginationItem>
+													<Button
+														size="icon"
+														variant="outline"
+														className="h-6 w-6"
+														onClick={() => setPage((prev)=>(prev-1)%games.length)}
+													>
+														<ChevronLeft className="h-3.5 w-3.5" />
+														<span className="sr-only">Previous Order</span>
+													</Button>
+												</PaginationItem>
+												<PaginationItem>
+													<Button
+														size="icon"
+														variant="outline"
+														className="h-6 w-6"
+														onClick={() => setPage((prev)=>(prev+1)%games.length)}
+													>
+														<ChevronRight className="h-3.5 w-3.5" />
+														<span className="sr-only">Next Order</span>
+													</Button>
+												</PaginationItem>
+											</PaginationContent>
+										</Pagination>
 									</CardFooter>
 								</Card>
 							</TabsContent>

@@ -1,14 +1,40 @@
 import { useNavigate } from "@remix-run/react";
 import { Button } from "~/components/ui/button";
 
-export function LoginPage(user: unknown) {
-  const navigate = useNavigate();
+export type User = {
+	steamID: string;
+	avatar: {
+		small: string;
+		medium: string;
+		large: string;
+		hash: string;
+	};
+	url: string;
+	visible: boolean;
+	personaState: number;
+	personaStateFlags: number;
+	allowsComments: boolean;
+	nickname: string;
+	lastLogOffTimestamp: number;
+	createdTimestamp: number;
+	realName: string;
+	primaryGroupID: string;
+	countryCode: string;
+	stateCode: string;
+};
+
+export function LoginPage() {
+	const navigate = useNavigate();
 	return (
 		<div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
 			<div className="flex items-center justify-center py-12">
 				<div className="mx-auto grid w-[350px] gap-6">
 					<div className="grid gap-4 justify-center">
-						<Button className="bg-transparent w-48 h-42 " variant="link" onClick={() => navigate("/auth/steam")}>
+						<Button
+							className="bg-transparent w-48 h-42 "
+							variant="link"
+							onClick={() => navigate("/auth/steam")}
+						>
 							<img
 								className="w-full h-full"
 								src="https://community.akamai.steamstatic.com/public/images/signinthroughsteam/sits_02.png"

@@ -10,9 +10,15 @@ import {
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import stylesheet from "./tailwind.css?url";
 import { themeSessionResolver } from "./sessions.server";
-import { PreventFlashOnWrongTheme, ThemeProvider, useTheme } from "remix-themes";
+import {
+	PreventFlashOnWrongTheme,
+	ThemeProvider,
+	useTheme,
+} from "remix-themes";
 import clsx from "clsx";
 import { Header } from "./components/header";
+import { authenticator } from "./auth.server";
+import { User } from "./pages/login";
 
 export const links: LinksFunction = () => [
 	{ rel: "stylesheet", href: stylesheet },
@@ -21,8 +27,10 @@ export const links: LinksFunction = () => [
 // Return the theme from the session storage using the loader
 export async function loader({ request }: LoaderFunctionArgs) {
 	const { getTheme } = await themeSessionResolver(request);
+  const data = await authenticator.isAuthenticated(request)
 	return {
 		theme: getTheme(),
+    user: data?.user
 	};
 }
 
@@ -36,24 +44,24 @@ export default function AppWithProviders() {
 }
 
 export function App() {
-	const data = useLoaderData<typeof loader>()
-  const [theme] = useTheme()
-  return (
-    <html lang="en" className={clsx(theme)}>
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
-        <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
-        <Links />
-      </head>
-      <body>
-        <Header/>
-        <Outlet />
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-      </body>
-    </html>
-  )
+	const data = useLoaderData<typeof loader>();
+	const [theme] = useTheme();
+	return (
+		<html lang="en" className={clsx(theme)}>
+			<head>
+				<meta charSet="utf-8" />
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
+				<Meta />
+				<PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
+				<Links />
+			</head>
+			<body>
+				<Header user={data.user as User}/>
+				<Outlet />
+				<ScrollRestoration />
+				<Scripts />
+				<LiveReload />
+			</body>
+		</html>
+	);
 }

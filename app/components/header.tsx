@@ -40,7 +40,7 @@ export function Header({user}: {user: User}) {
 						className="overflow-hidden rounded-full"
 					>
 						<img
-							src={user.avatar.large}
+							src={user.avatar.large || "https://community.akamai.steamstatic.com/public/images/signinthroughsteam/sits_02.png"}
 							width={36}
 							height={36}
 							alt="Avatar"

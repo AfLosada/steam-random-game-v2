@@ -18,7 +18,7 @@ import {
 import clsx from "clsx";
 import { Header } from "./components/header";
 import { authenticator } from "./auth.server";
-import { User } from "./pages/login";
+import type { User } from "./pages/login";
 
 export const links: LinksFunction = () => [
 	{ rel: "stylesheet", href: stylesheet },
@@ -55,12 +55,11 @@ export function App() {
 				<PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
 				<Links />
 			</head>
-			<body>
+			<body className="flex min-h-screen max-h-screen flex-col">
 				<Header user={data.user as User}/>
 				<Outlet />
 				<ScrollRestoration />
 				<Scripts />
-				<LiveReload />
 			</body>
 		</html>
 	);

@@ -3,7 +3,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node"; // or cloudflare/deno
 import { useLoaderData } from "@remix-run/react";
 import { Suspense } from "react";
 import { authenticator } from "~/auth.server";
-import { GameList } from "~/pages/gameList";
+import { GameList } from "~/components/game-list";
 import type { User } from "~/pages/login";
 
 export type Game = {
@@ -39,7 +39,7 @@ export default function Products() {
 
 	return (
 		<Suspense>
-			<GameList games={games} user={user?.user as User} />
+			<GameList games={games} />
 		</Suspense>
 	);
 }

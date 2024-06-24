@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { authenticator } from "~/auth.server";
 import { GameList } from "~/components/game-list";
 import type { User } from "~/pages/login";
+import { Main } from "~/pages/main";
 
 export type Game = {
 	appid: number;
@@ -26,6 +27,7 @@ export type Response = {
 export async function loader({ request }: LoaderFunctionArgs) {
 	const steamKey = process.env.STEAM_KEY;
 	const user = await authenticator.isAuthenticated(request);
+	//TODO: https://steamapi.xpaw.me/#ISteamWebAPIUtil/GetSupportedAPIList
 	const url = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${steamKey}&steamid=${user?.user.steamID}&format=json&include_appinfo=true`;
 	const res = await fetch(url);
 	const {
@@ -39,7 +41,7 @@ export default function Products() {
 
 	return (
 		<Suspense>
-			<GameList games={games} />
+			<Main games={games} />
 		</Suspense>
 	);
 }

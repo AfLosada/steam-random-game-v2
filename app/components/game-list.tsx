@@ -1,6 +1,6 @@
 import { Tabs, TabsContent } from "@radix-ui/react-tabs";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { Table, ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "./ui/button";
 import {
 	Card,
@@ -16,7 +16,7 @@ import {
 	TableRow,
 	TableHead,
 	TableBody,
-	TableCell,
+	Table,
 } from "./ui/table";
 import {
 	DropdownMenu,

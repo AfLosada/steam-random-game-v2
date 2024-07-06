@@ -9,7 +9,7 @@ export const authenticator = new Authenticator<User>(sessionStorage);
 authenticator.use(
   new SteamStrategy(
     {
-      returnURL: "/auth/steam/callback",
+      returnURL: `${process.env.RETURN_URL || "https://steam-random-game-v2.vercel.app"}/auth/steam/callback`,
       apiKey: process.env.STEAM_KEY || "", // you can get it here: https://steamcommunity.com/dev/apikey
     },
     async (user) => user // perform additional checks for user here, I just leave this to SteamStrategyVerifyParams value

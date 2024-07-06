@@ -9,7 +9,7 @@ export function GameRow({ game }: { game: Game }) {
 	const calculateDateDiff = () => {
 		const now = new Date()
 		const lastTimePlayed = new Date(game.rtime_last_played)
-		const timeDiff = Math.abs(now - lastTimePlayed)
+		const timeDiff = Math.abs(now.getTime() - lastTimePlayed.getTime())
 		const parsedAsDate = new Date(timeDiff)
 		return parsedAsDate
 	}
@@ -22,9 +22,9 @@ export function GameRow({ game }: { game: Game }) {
 				<img
 					alt={`${game.name} icon`}
 					className="aspect-square rounded-md object-cover"
-					height="64"
+					height="100%"
 					src={`https://media.steampowered.com/steamcommunity/public/images/apps/${game.appid}/${game.img_icon_url}.jpg`}
-					width="64"
+					width="100%"
 				/>
 			</TableCell>
 			<TableCell className="font-medium sm:table-cell">{game.name}</TableCell>

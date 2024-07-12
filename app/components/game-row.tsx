@@ -34,21 +34,6 @@ export function GameRow({ game }: { game: Game }) {
 			<TableCell className="hidden md:table-cell">
 				{ parsedAsDate.toDateString() }
 			</TableCell>
-			<TableCell>
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<Button aria-haspopup="true" size="icon" variant="ghost">
-							<MoreHorizontal className="h-4 w-4" />
-							<span className="sr-only">Toggle menu</span>
-						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent align="end">
-						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuItem>Edit</DropdownMenuItem>
-						<DropdownMenuItem>Delete</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
-			</TableCell>
 		</TableRow>
 	);
 }

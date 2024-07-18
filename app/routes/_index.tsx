@@ -3,9 +3,9 @@ import { LoginPage } from "~/pages/login";
 import {
 	ThemeProvider,
 } from "remix-themes";
-import { themeSessionResolver } from "~/sessions";
+import { themeSessionResolver } from "~/services/session.server";
 import { useLoaderData, useNavigate } from "@remix-run/react";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/services/auth.server";
 import { useEffect } from "react";
 
 // Return the theme from the session storage using the loader

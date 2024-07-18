@@ -9,7 +9,7 @@ import {
 } from "@remix-run/react";
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import stylesheet from "./tailwind.css?url";
-import { themeSessionResolver } from "./sessions";
+import { themeSessionResolver } from "./services/session.server";
 import {
 	PreventFlashOnWrongTheme,
 	ThemeProvider,
@@ -17,7 +17,7 @@ import {
 } from "remix-themes";
 import clsx from "clsx";
 import { Header } from "./components/header";
-import { authenticator } from "./auth.server";
+import { authenticator } from "./services/auth.server";
 import type { User } from "./pages/login";
 
 export const links: LinksFunction = () => [

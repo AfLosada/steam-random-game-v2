@@ -14,14 +14,14 @@ export const sessionStorage = createCookieSessionStorage({
 	cookie: {
 		name: "_session",
 		path: "/",
-		httpOnly: true,
+		httpOnly: true, 
 		sameSite: "lax",
 		secrets: ["s3cr3t"],
 		// Set domain and secure only if in production
 		...(isProduction
 			? { domain: "https://steam-random-game-v2.vercel.app", secure: true }
 			: {}),
-    expires: calculateExpirationDate(7) // expire cookie after 7 days
+    expires: calculateExpirationDate(7)
 	},
 });
 

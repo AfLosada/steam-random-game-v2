@@ -2,7 +2,7 @@ import { json } from "@remix-run/node"; // or cloudflare/deno
 import type { LoaderFunctionArgs } from "@remix-run/node"; // or cloudflare/deno
 import { useLoaderData } from "@remix-run/react";
 import { Suspense } from "react";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/services/auth.server";
 import { GameList } from "~/components/game-list";
 import type { User } from "~/pages/login";
 import { Main } from "~/pages/main";

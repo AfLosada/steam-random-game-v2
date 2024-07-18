@@ -1,6 +1,6 @@
 import { Authenticator } from "remix-auth";
 import { SteamStrategy, type SteamStrategyVerifyParams } from "@ianlucas/remix-auth-steam";
-import { sessionStorage } from "~/sessions";
+import { sessionStorage } from "~/services/session.server";
 
 export type User = SteamStrategyVerifyParams;
 

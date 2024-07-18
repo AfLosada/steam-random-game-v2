@@ -32,7 +32,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 	console.log(user)
 	console.log(request)
 	//TODO: https://steamapi.xpaw.me/#ISteamWebAPIUtil/GetSupportedAPIList
-	const url = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${steamKey}&steamid=${user?.user.steamID}&format=json&include_appinfo=true`;
+	const url = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${steamKey}&steamid=${user?.user.steamID || ''}&format=json&include_appinfo=true`;
 	const res = await fetch(url);
 	console.log(res)
 	const {

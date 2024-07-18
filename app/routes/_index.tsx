@@ -13,6 +13,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 	const { getTheme } = await themeSessionResolver(request);
 	//https://github.com/Andreychik32/remix-auth-steam#file-structure
 	const user = await authenticator.isAuthenticated(request);
+	console.log(user)
 	return {
 		theme: getTheme(),
 		user,
@@ -24,14 +25,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
 // `themeAction` is the action name that's used to change the theme in the session storage.
 export default function AppWithProviders() {
 	const data = useLoaderData<typeof loader>();
-/* 
+
+	console.log(data)
+
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (data.user) {
 			navigate("/main");
 		}
-	}, [data, navigate]); */
+	}, [data, navigate]);
 
 	return (
 		<ThemeProvider specifiedTheme={data.theme} themeAction="/action/set-theme">

@@ -9,7 +9,7 @@ import {
 } from "@remix-run/react";
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import stylesheet from "./tailwind.css?url";
-import { themeSessionResolver } from "./sessions.server";
+import { themeSessionResolver } from "./sessions";
 import {
 	PreventFlashOnWrongTheme,
 	ThemeProvider,

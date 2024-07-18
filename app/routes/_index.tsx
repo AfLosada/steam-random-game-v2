@@ -3,7 +3,7 @@ import { LoginPage } from "~/pages/login";
 import {
 	ThemeProvider,
 } from "remix-themes";
-import { themeSessionResolver } from "~/sessions.server";
+import { themeSessionResolver } from "~/sessions";
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import { authenticator } from "~/auth.server";
 import { useEffect } from "react";
@@ -13,8 +13,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 	const { getTheme } = await themeSessionResolver(request);
 	//https://github.com/Andreychik32/remix-auth-steam#file-structure
 	const user = await authenticator.isAuthenticated(request);
-	console.log("user")
-	console.log(user)
 	return {
 		theme: getTheme(),
 		user,

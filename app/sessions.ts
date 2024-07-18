@@ -4,7 +4,6 @@ import { createThemeSessionResolver } from "remix-themes";
 // You can default to 'development' if process.env.NODE_ENV is not set
 const isProduction = process.env.NODE_ENV === "production";
 
-
 const calculateExpirationDate = (days: number) => {
   const expDate = new Date()
   expDate.setDate(expDate.getDate() + days)

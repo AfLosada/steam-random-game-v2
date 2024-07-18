@@ -13,6 +13,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 	const { getTheme } = await themeSessionResolver(request);
 	//https://github.com/Andreychik32/remix-auth-steam#file-structure
 	const user = await authenticator.isAuthenticated(request);
+	console.log("user")
 	console.log(user)
 	return {
 		theme: getTheme(),

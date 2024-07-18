@@ -27,12 +27,12 @@ export type Response = {
 export async function loader({ request }: LoaderFunctionArgs) {
 	const steamKey = process.env.STEAM_KEY;
 
-	console.log("main loader")
+	console.log("main loader");
 	const user = await authenticator.isAuthenticated(request);
-	console.log(user)
-	console.log(request)
+	console.log(user);
+	console.log(request);
 	//TODO: https://steamapi.xpaw.me/#ISteamWebAPIUtil/GetSupportedAPIList
-	const url = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${steamKey}&steamid=${user?.user.steamID || ''}&format=json&include_appinfo=true`;
+	const url = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${steamKey}&steamid=${user?.user.steamID || ""}&format=json&include_appinfo=true`;
 	const res = await fetch(url);
 	if (res.ok) {
 		const {
@@ -40,6 +40,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 		} = await res.json();
 		return json({ games, user });
 	}
+	return { games: [], user };
 }
 
 export default function Products() {

@@ -34,15 +34,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
 	//TODO: https://steamapi.xpaw.me/#ISteamWebAPIUtil/GetSupportedAPIList
 	const url = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${steamKey}&steamid=${user?.user.steamID || ''}&format=json&include_appinfo=true`;
 	const res = await fetch(url);
-	console.log(res)
-	const {
-		response: { games },
-	} = await res.json();
-	return json({ games, user });
+	if (res.ok) {
+		const {
+			response: { games },
+		} = await res.json();
+		return json({ games, user });
+	}
 }
 
 export default function Products() {
-	const { games, user } = useLoaderData<typeof loader>();
+	const { games = [] } = useLoaderData<typeof loader>();
 
 	return (
 		<Suspense>

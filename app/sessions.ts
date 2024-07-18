@@ -19,9 +19,8 @@ export const sessionStorage = createCookieSessionStorage({
 		secrets: ["s3cr3t"],
 		// Set domain and secure only if in production
 		...(isProduction
-			? { domain: "your-production-domain.com", secure: true }
+			? { domain: "https://steam-random-game-v2.vercel.app", secure: true }
 			: {}),
-		secure: isProduction, // enable this in prod only
     expires: calculateExpirationDate(7) // expire cookie after 7 days
 	},
 });

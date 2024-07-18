@@ -25,20 +25,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
 // `specifiedTheme` is the stored theme in the session storage.
 // `themeAction` is the action name that's used to change the theme in the session storage.
 export default function AppWithProviders() {
-	const data = useLoaderData<typeof loader>();
+	const { user, theme } = useLoaderData<typeof loader>();
 
-	console.log(data)
+	console.log(user)
 
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (data.user) {
+		if (user) {
 			navigate("/main");
 		}
-	}, [data, navigate]);
+	}, [user, navigate]);
 
 	return (
-		<ThemeProvider specifiedTheme={data.theme} themeAction="/action/set-theme">
+		<ThemeProvider specifiedTheme={theme} themeAction="/action/set-theme">
 			<LoginPage />
 		</ThemeProvider>
 	);
